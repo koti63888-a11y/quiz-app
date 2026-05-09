@@ -5,7 +5,7 @@ function Results() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/results")
+    fetch("https://quiz-backend-snmo.onrender.com/")
       .then((res) => res.json())
       .then((d) => setData(d));
   }, []);

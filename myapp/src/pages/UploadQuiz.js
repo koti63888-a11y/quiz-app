@@ -18,7 +18,7 @@ function UploadQuiz() {
         answer: lines[5]
       };
 
-      await fetch("http://localhost:5000/add-quiz", {
+      await fetch("https://quiz-backend-snmo.onrender.com/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

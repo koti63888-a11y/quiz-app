@@ -20,7 +20,7 @@ function TakeQuiz() {
   const submitQuiz = async () => {
     const email = localStorage.getItem("user");
 
-    const res = await fetch("http://localhost:5000/submit", {
+    const res = await fetch("https://quiz-backend-snmo.onrender.com/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
