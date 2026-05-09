@@ -1,97 +1,200 @@
 const express = require("express");
-const cors = require("cors");
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 const app = express();
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json()); 
 
-// DB
-mongoose.connect("mongodb://127.0.0.1:27017/quizapp")
-  .then(() => console.log("MongoDB Connected ✅"))
-  .catch(err => console.log(err));
+/* =========================
+   MONGODB ATLAS CONNECTION
+========================= */
 
-// MODELS
-const User = mongoose.model("User", {
+mongoose.connect(
+  "mongodb://koti:Koti9900@cluster0.nvfxzfa.mongodb.net/quizapp?authSource=admin"
+)
+.then(() => {
+  console.log("MongoDB Atlas Connected ✅");
+})
+.catch((err) => {
+  console.log(err);
+});
+
+/* =========================
+   USER SCHEMA
+========================= */
+
+const UserSchema = new mongoose.Schema({
   email: String,
   password: String,
-  role: String
+  role: String,
 });
 
-const Quiz = mongoose.model("Quiz", {
+const User = mongoose.model("User", UserSchema);
+
+/* =========================
+   QUIZ SCHEMA
+========================= */
+
+const QuizSchema = new mongoose.Schema({
   question: String,
   options: [String],
-  answer: String
+  answer: String,
 });
 
-// 🆕 RESULT MODEL
-const Result = mongoose.model("Result", {
+const Quiz = mongoose.model("Quiz", QuizSchema);
+
+/* =========================
+   RESULT SCHEMA
+========================= */
+
+const ResultSchema = new mongoose.Schema({
   email: String,
   score: Number,
-  total: Number
+  total: Number,
 });
 
-// REGISTER
+const Result = mongoose.model("Result", ResultSchema);
+
+/* =========================
+   REGISTER API
+========================= */
+
 app.post("/register", async (req, res) => {
-  const exist = await User.findOne({ email: req.body.email });
-  if (exist) return res.send("User exists ❗");
+  try {
+    console.log("📥 DATA RECEIVED:", req.body);
 
-  const user = new User(req.body);
-  await user.save();
+    const user = new User(req.body);
 
-  res.send("Registered ✅");
+    await user.save();
+
+    console.log("✅ Saved to MongoDB");
+
+    res.json({
+      success: true,
+      message: "Registered Successfully",
+    });
+  } catch (err) {
+    console.log(err);
+
+    res.json({
+      success: false,
+      message: "Server Error",
+    });
+  }
 });
 
-// LOGIN
+/* =========================
+   LOGIN API
+========================= */
+
 app.post("/login", async (req, res) => {
-  const user = await User.findOne(req.body);
-  if (user) res.json(user);
-  else res.json("Invalid");
-});
+  try {
+    const { email, password } = req.body;
 
-// ADD QUIZ
-app.post("/add-quiz", async (req, res) => {
-  const quiz = new Quiz(req.body);
-  await quiz.save();
-  res.send("Quiz Added ✅");
-});
+    const user = await User.findOne({
+      email,
+      password,
+    });
 
-// GET QUIZ
-app.get("/quiz", async (req, res) => {
-  const data = await Quiz.find();
-  res.json(data);
-});
-
-// 🆕 SUBMIT QUIZ (CALCULATE SCORE)
-app.post("/submit", async (req, res) => {
-  const { email, answers } = req.body;
-
-  const quiz = await Quiz.find();
-
-  let score = 0;
-
-  quiz.forEach((q, i) => {
-    if (answers[i] === q.answer) {
-      score++;
+    if (user) {
+      res.json({
+        success: true,
+        role: user.role,
+        email: user.email,
+      });
+    } else {
+      res.json({
+        success: false,
+        message: "Invalid Login",
+      });
     }
-  });
+  } catch (err) {
+    console.log(err);
 
-  const result = new Result({
-    email,
-    score,
-    total: quiz.length
-  });
-
-  await result.save();
-
-  res.json({ score, total: quiz.length });
+    res.json({
+      success: false,
+      message: "Server Error",
+    });
+  }
 });
 
-// 🆕 GET RESULTS
+/* =========================
+   UPLOAD QUIZ API
+========================= */
+
+app.post("/upload-quiz", async (req, res) => {
+  try {
+    const quiz = new Quiz(req.body);
+
+    await quiz.save();
+
+    res.json({
+      success: true,
+      message: "Quiz Uploaded Successfully",
+    });
+  } catch (err) {
+    console.log(err);
+
+    res.json({
+      success: false,
+      message: "Upload Failed",
+    });
+  }
+});
+
+/* =========================
+   GET QUIZZES API
+========================= */
+
+app.get("/quizzes", async (req, res) => {
+  try {
+    const quizzes = await Quiz.find();
+
+    res.json(quizzes);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+/* =========================
+   SAVE RESULT API
+========================= */
+
+app.post("/save-result", async (req, res) => {
+  try {
+    const result = new Result(req.body);
+
+    await result.save();
+
+    res.json({
+      success: true,
+      message: "Result Saved",
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+/* =========================
+   GET RESULTS API
+========================= */
+
 app.get("/results", async (req, res) => {
-  const data = await Result.find();
-  res.json(data);
+  try {
+    const results = await Result.find();
+
+    res.json(results);
+  } catch (err) {
+    console.log(err);
+  }
 });
 
-app.listen(5000, () => console.log("Server running 🚀"));
+/* =========================
+   SERVER
+========================= */
+
+app.listen(5000, () => {
+  console.log("Server running on port 5000 🚀");
+});
