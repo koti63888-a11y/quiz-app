@@ -12,7 +12,7 @@ app.use(express.json());
 ========================= */
 
 mongoose.connect(
-  "mongodb://koti:Koti9900@cluster0.nvfxzfa.mongodb.net/quizapp?authSource=admin"
+  "mongodb+srv://koti:Koti9900@cluster0.nvfxzfa.mongodb.net/quizapp?retryWrites=true&w=majority&appName=Cluster0"
 )
 .then(() => {
   console.log("MongoDB Atlas Connected ✅");
