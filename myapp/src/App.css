@@ -208,4 +208,113 @@ button:hover {
 
 .popup-menu button {
   width: 100%;
+}/* RESET */
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* BODY */
+
+body{
+  width: 100%;
+  overflow-x: hidden;
+  font-family: Arial, sans-serif;
+  background: #020b2d;
+  color: white;
+}
+
+/* CENTER CONTAINER */
+
+.center-container{
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 15px;
+}
+
+/* CARD */
+
+.card{
+  width: 100%;
+  max-width: 400px;
+
+  background: #08143c;
+
+  padding: 20px;
+
+  border-radius: 12px;
+
+  box-shadow: 0px 0px 15px rgba(0,0,0,0.4);
+}
+
+/* TITLE */
+
+.card h2{
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* INPUTS */
+
+input,
+select,
+button{
+  width: 100%;
+
+  padding: 12px;
+
+  margin-top: 12px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  font-size: 16px;
+}
+
+/* INPUT */
+
+input,
+select{
+  background: #f1f1f1;
+}
+
+/* BUTTON */
+
+button{
+  background: #29b6f6;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover{
+  opacity: 0.9;
+}
+
+/* MOBILE */
+
+@media screen and (max-width: 600px){
+
+  .card{
+    max-width: 100%;
+  }
+
+  .card h2{
+    font-size: 24px;
+  }
+
+  input,
+  select,
+  button{
+    font-size: 16px;
+  }
+
 }
