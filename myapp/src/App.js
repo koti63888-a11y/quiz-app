@@ -6,7 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import UploadQuiz from "./pages/UploadQuiz";
 import TakeQuiz from "./pages/TakeQuiz";
 import Results from "./pages/Results";
-
+import "./App.css";
 function App() {
   return (
     <BrowserRouter>
