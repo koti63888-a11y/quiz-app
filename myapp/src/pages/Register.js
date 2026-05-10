@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 function Register() {
   const navigate = useNavigate();
 
-  const API_URL = "https://quiz-backend-snmo.onrender.com/";
+  const API_URL = "https://quiz-backend-snmo.onrender.com";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

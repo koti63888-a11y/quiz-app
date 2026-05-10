@@ -5,7 +5,7 @@ function Results() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch("https://quiz-backend-snmo.onrender.com/")
+    fetch("https://quiz-backend-snmo.onrender.com")
       .then((res) => res.json())
       .then((d) => setData(d));
   }, []);

@@ -8,7 +8,7 @@ function Login() {
   const [password, setPassword] = useState("");
 
   const login = async () => {
-    const res = await fetch("https://quiz-backend-snmo.onrender.com/", {
+    const res = await fetch("https://quiz-backend-snmo.onrender.com", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
