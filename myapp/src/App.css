@@ -5,118 +5,163 @@
 }
 
 body {
-  font-family: "Segoe UI", Arial, sans-serif;
-  background: #0f172a;
-  color: white;
+  font-family: "Segoe UI", sans-serif;
+  background: #eef0f4;
+  color: #111;
   overflow-x: hidden;
 }
 
-/* Login/Register */
-.center-container {
+/* MOBILE APP SCREEN */
+.center-container,
+.dashboard,
+.quiz-page {
   min-height: 100vh;
   width: 100%;
+  max-width: 430px;
+  margin: auto;
+  background: #4f8f88;
+  padding: 25px;
+}
+
+/* CARD */
+.card {
+  width: 100%;
+  background: transparent;
+  color: white;
+  box-shadow: none;
+  padding-top: 120px;
+}
+
+/* LOGO CIRCLE */
+.card h2 {
+  width: 130px;
+  height: 130px;
+  background: white;
+  color: #00695c;
+  border-radius: 50%;
+  margin: 0 auto 70px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  font-size: 26px;
+  font-weight: bold;
 }
 
-.card {
-  width: 100%;
-  max-width: 400px;
-  background: #1e293b;
-  padding: 25px;
-  border-radius: 15px;
-}
-
-/* Common */
+/* INPUT */
 input,
 select,
-textarea,
-button {
+textarea {
   width: 100%;
-  padding: 14px;
+  padding: 16px;
   margin-top: 12px;
-  border-radius: 8px;
-  border: none;
+  border-radius: 14px;
+  border: 2px solid rgba(255,255,255,0.8);
+  background: transparent;
+  color: white;
   font-size: 16px;
 }
 
+input::placeholder {
+  color: #e5e5e5;
+}
+
+/* BUTTON */
 button {
-  background: #38bdf8;
-  color: black;
+  width: 100%;
+  padding: 16px;
+  margin-top: 22px;
+  border: none;
+  border-radius: 14px;
+  background: #ffd166;
+  color: white;
+  font-size: 17px;
   font-weight: bold;
   cursor: pointer;
 }
 
-/* Dashboard */
+/* DASHBOARD */
 .dashboard {
-  width: 100%;
-  min-height: 100vh;
-  padding: 25px;
+  color: white;
 }
 
 .dashboard h2 {
-  font-size: 28px;
-  margin-bottom: 20px;
+  font-size: 26px;
+  margin-bottom: 30px;
 }
 
 .dashboard button {
-  width: 100%;
-  max-width: 350px;
-  display: block;
+  background: #ffd166;
+  color: white;
+  margin-bottom: 15px;
 }
 
-/* Quiz */
+/* QUIZ CARD */
 .quiz-card {
   width: 100%;
-  max-width: 650px;
-  margin: 20px auto;
-  max-height: 85vh;
-  overflow-y: auto;
-  background: #1e293b;
-  padding: 20px;
-  border-radius: 15px;
+  max-width: 430px;
+  min-height: 100vh;
+  margin: auto;
+  background: #f4f5f8;
+  padding: 25px;
+  color: #111;
 }
 
 .question-box {
-  margin-bottom: 20px;
-  padding: 15px;
-  background: #0f172a;
-  border-radius: 12px;
+  background: white;
+  padding: 30px;
+  border-radius: 18px;
+  margin: 30px 0;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
 }
 
-.option-card {
+.option-card,
+.option {
+  background: white;
+  padding: 16px;
+  margin-top: 15px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.option-card input,
+.option input {
+  width: 20px;
+  height: 20px;
+}
+
+.submit-btn {
+  background: #00695c;
+  color: white;
+}
+
+/* FLOATING MENU */
+.floating-btn {
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background: #00b4d8;
+  color: black;
+  font-size: 25px;
+  z-index: 1000;
+}
+
+.popup-menu {
+  position: fixed;
+  top: 90px;
+  right: 20px;
+  width: 220px;
   background: #1e293b;
-  margin-top: 10px;
-  padding: 12px;
-  border-radius: 10px;
+  padding: 15px;
+  border-radius: 15px;
+  z-index: 1000;
 }
 
-.option-card input {
-  width: 18px;
-  height: 18px;
-}
-
-/* Mobile */
-@media screen and (max-width: 600px) {
-  .card {
-    max-width: 100%;
-  }
-
-  .dashboard {
-    padding: 20px;
-  }
-
-  .dashboard h2 {
-    font-size: 26px;
-  }
-
-  .quiz-card {
-    max-width: 100%;
-    padding: 15px;
-  }
+.popup-menu button {
+  background: #38bdf8;
+  color: black;
 }
