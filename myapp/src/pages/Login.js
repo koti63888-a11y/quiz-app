@@ -2,46 +2,72 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
+
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const login = async () => {
-    const res = await fetch("https://quiz-backend-snmo.onrender.com", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ email, password })
-    });
 
-    const data = await res.json();
+    try {
 
-    console.log("LOGIN:", data);
+      const res = await fetch(
+        "https://quiz-backend-snmo.onrender.com/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            email,
+            password
+          })
+        }
+      );
 
-    if (data !== "Invalid") {
+      const data = await res.json();
 
-      // 🔥 CLEAR OLD DATA FIRST
-      localStorage.clear();
+      console.log("LOGIN:", data);
 
-      // 🔥 SAVE NEW USER
-      localStorage.setItem("user", data.email);
-      localStorage.setItem("role", data.role);
+      if (data.success) {
 
-      navigate("/dashboard");
+        // CLEAR OLD DATA
+        localStorage.clear();
 
-    } else {
-      alert("Invalid login ❌");
+        // SAVE USER
+        localStorage.setItem("user", data.email);
+        localStorage.setItem("role", data.role);
+
+        alert("Login Successful ✅");
+
+        navigate("/dashboard");
+
+      } else {
+
+        alert(data.message || "Invalid login ❌");
+
+      }
+
+    } catch (err) {
+
+      console.log(err);
+
+      alert("Server Error ❌");
+
     }
+
   };
 
   return (
     <div className="center-container">
+
       <div className="card">
+
         <h2>Login</h2>
 
         <input
+          type="email"
           placeholder="Email"
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -59,7 +85,9 @@ function Login() {
         <button onClick={() => navigate("/register")}>
           Register
         </button>
+
       </div>
+
     </div>
   );
 }
