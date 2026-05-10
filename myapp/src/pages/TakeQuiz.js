@@ -1,76 +1,128 @@
 import { useEffect, useState } from "react";
-import FloatingMenu from "../components/FloatingMenu";
 
 function TakeQuiz() {
-  const [quiz, setQuiz] = useState([]);
-  const [answers, setAnswers] = useState([]);
+  const API_URL = "https://quiz-backend-snmo.onrender.com";
+
+  const [quizzes, setQuizzes] = useState([]);
+  const [selectedQuiz, setSelectedQuiz] = useState(null);
+  const [answers, setAnswers] = useState({});
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:5000/quiz")
+    fetch(`${API_URL}/quizzes`)
       .then((res) => res.json())
-      .then((data) => setQuiz(data));
+      .then((data) => setQuizzes(data));
   }, []);
 
-  const selectAnswer = (qIndex, option) => {
-    const newAns = [...answers];
-    newAns[qIndex] = option;
-    setAnswers(newAns);
+  const startQuiz = async (quizId) => {
+    setLoading(true);
+
+    const res = await fetch(`${API_URL}/quiz/${quizId}`);
+    const data = await res.json();
+
+    setLoading(false);
+
+    if (data.success) {
+      setSelectedQuiz(data.quiz);
+    } else {
+      alert(data.message);
+    }
+  };
+
+  const selectAnswer = (qIndex, answer) => {
+    setAnswers({
+      ...answers,
+      [qIndex]: answer,
+    });
   };
 
   const submitQuiz = async () => {
-    const email = localStorage.getItem("user");
+    let score = 0;
 
-    const res = await fetch("https://quiz-backend-snmo.onrender.com", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ email, answers })
+    selectedQuiz.questions.forEach((q, index) => {
+      if (answers[index] === q.answer) {
+        score++;
+      }
     });
 
-    const data = await res.json();
+    const email = localStorage.getItem("user");
 
-    alert(`Score: ${data.score}/${data.total}`);
+    await fetch(`${API_URL}/save-result`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        score,
+        total: selectedQuiz.questions.length,
+        quizTitle: selectedQuiz.title,
+      }),
+    });
+
+    alert(`Your Score: ${score}/${selectedQuiz.questions.length}`);
   };
 
-  const labels = ["A", "B", "C", "D"];
+  if (loading) {
+    return (
+      <div className="center-container">
+        <h2>Loading quiz...</h2>
+      </div>
+    );
+  }
+
+  if (!selectedQuiz) {
+    return (
+      <div className="dashboard">
+        <h2>Available Quizzes</h2>
+
+        {quizzes.map((quiz) => (
+          <div className="question-box" key={quiz._id}>
+            <h3>{quiz.title}</h3>
+            <p>Questions: {quiz.questionCount}</p>
+
+            {quiz.isPaid ? (
+              <p>Premium Quiz ₹{quiz.price}</p>
+            ) : (
+              <p>Free Quiz</p>
+            )}
+
+            <button onClick={() => startQuiz(quiz._id)}>
+              Start Quiz
+            </button>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
-    <>
-      <FloatingMenu />
+    <div className="quiz-card">
+      <h2>{selectedQuiz.title}</h2>
 
-      <div className="center-container">
-        <div className="quiz-card">
-          <h2>Quiz 🎯</h2>
+      {selectedQuiz.questions.map((q, qIndex) => (
+        <div className="question-box" key={qIndex}>
+          <h3>
+            {qIndex + 1}. {q.question}
+          </h3>
 
-          {quiz.map((q, i) => (
-            <div key={i} className="question-box">
-              <h3>{i + 1}. {q.question}</h3>
-
-              {q.options.map((opt, j) => (
-                <label key={j} className="option-card">
-                  <input
-                    type="radio"
-                    name={`q${i}`}
-                    onChange={() => selectAnswer(i, opt)}
-                  />
-
-                  <div className="option-label">
-                    {labels[j]}
-                  </div>
-
-                  <span>{opt}</span>
-                </label>
-              ))}
-            </div>
+          {q.options.map((option, oIndex) => (
+            <label className="option-card" key={oIndex}>
+              <input
+                type="radio"
+                name={`question-${qIndex}`}
+                onChange={() => selectAnswer(qIndex, option)}
+              />
+              {option}
+            </label>
           ))}
-
-          <button className="submit-btn" onClick={submitQuiz}>
-            Submit Quiz
-          </button>
         </div>
-      </div>
-    </>
+      ))}
+
+      <button className="submit-btn" onClick={submitQuiz}>
+        Submit Quiz
+      </button>
+    </div>
   );
 }
 
